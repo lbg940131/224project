@@ -1,0 +1,18 @@
+Train on 143613 samples, validate on 15958 samples
+Epoch 1/2
+
+
+
+
+
+ ROC-AUC - epoch: 1 - score: 0.985933 
+
+ - 581s - loss: 0.0568 - acc: 0.9795 - val_loss: 0.0451 - val_acc: 0.9831
+Epoch 2/2
+
+
+
+
+ ROC-AUC - epoch: 2 - score: 0.986313 
+
+ - 566s - loss: 0.0409 - acc: 0.9836 - val_loss: 0.0439 - val_acc: 0.9834
