@@ -9,6 +9,7 @@ from keras import initializers, regularizers, constraints, optimizers, layers
 from keras.callbacks import Callback
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
 
 path = '../input/'
 comp = 'jigsaw-toxic-comment-classification-challenge/'
