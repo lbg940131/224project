@@ -242,26 +242,26 @@ if __name__ == "__main__":
                      callbacks=callbacks, verbose=2, shuffle=True)
     
     # summarize history for Accuracy
-    fig_acc = plt.figure(figsize=(10, 10))
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('Acc')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
-    # plt.show()
-    fig_acc.savefig(base_path_output + "model_accuracy.png")
+    # fig_acc = plt.figure(figsize=(10, 10))
+    # plt.plot(history.history['acc'])
+    # plt.plot(history.history['val_acc'])
+    # plt.title('model accuracy')
+    # plt.ylabel('Acc')
+    # plt.xlabel('epoch')
+    # plt.legend(['train', 'test'], loc='upper left')
+    # # plt.show()
+    # fig_acc.savefig(base_path_output + "model_accuracy.png")
     
-    # summarize history for loss
-    fig_loss = plt.figure(figsize=(10, 10))
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
-    # plt.show()
-    fig_loss.savefig(base_path_output + "model_loss.png")
+    # # summarize history for loss
+    # fig_loss = plt.figure(figsize=(10, 10))
+    # plt.plot(history.history['loss'])
+    # plt.plot(history.history['val_loss'])
+    # plt.title('model loss')
+    # plt.ylabel('loss')
+    # plt.xlabel('epoch')
+    # plt.legend(['train', 'test'], loc='upper left')
+    # # plt.show()
+    # fig_loss.savefig(base_path_output + "model_loss.png")
     
     # if best iteration's model was saved then load and use it
     if os.path.isfile(model_path):
