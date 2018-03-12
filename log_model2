@@ -1,0 +1,21 @@
+
+ 
+
+
+
+
+ ROC-AUC - epoch: 1 - score: 0.984789
+
+ - 725s - loss: 0.0574 - acc: 0.9793 - val_loss: 0.0459 - val_acc: 0.9821
+Epoch 2/2
+
+
+
+
+
+
+
+
+ ROC-AUC - epoch: 2 - score: 0.985146
+
+ - 703s - loss: 0.0404 - acc: 0.9839 - val_loss: 0.0452 - val_acc: 0.9823
