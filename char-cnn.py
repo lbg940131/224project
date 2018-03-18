@@ -123,15 +123,14 @@ if __name__ == "__main__":
 	base_path_output = ''
 	# define path to save model
 	model_path = base_path_output + 'keras_model_baseline.h5'
-	EMBEDDING_FILE = base_path_input + 'crawl-300d-2M.vec'  
-	
+
 	train = pd.read_csv(base_path_input + 'train.csv')
 	test = pd.read_csv(base_path_input + 'test.csv') 
 		
 	print("num train: ", train.shape[0])
 	print("num test: ", test.shape[0])     
 	
-	maxlen = 150  # max number of words in a comment to use
+	maxlen = 1500  # max number of words in a comment to use
 	embed_size = 300  # how big is each word vector
 	max_features = 100000  # how many unique words to use (i.e num rows in embedding vector)
 
@@ -192,69 +191,80 @@ if __name__ == "__main__":
 	print(list_sentences_train[:3])
 
 	all_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-	def char2idx(word):
-		vec = np.zeros((10))
-		for i in range(min(len(vec),len(word))):
-			char= word[i]
+	# def char2idx(word):
+	# 	vec = np.zeros((10))
+	# 	for i in range(min(len(vec),len(word))):
+	# 		char= word[i]
+	# 		idx = all_chars.find(char)+1
+	# 		vec[i]= idx
+	# 	return vec
+
+	# list_of_list_words = map(lambda x: x.split(), list_sentences_train) #shape=(159571,num_words_in_sentence)
+	# # list_wordcharidx = np.array(map(lambda x: map(char2idx, x), list_of_list_words))
+
+	# X_p = np.zeros((len(list_of_list_words),maxlen))
+	# for i in range(len(list_of_list_words)):
+	# 	word_list=list_of_list_words[i]
+	# 	for j in range(min(maxlen,len(word_list))):
+	# 		word = word_list[j]
+	# 		v = char2idx(word)
+	# 		X_p[i,j,:]=v
+
+
+	# print(X_p.shape)
+	# print(X_p[0])
+
+
+	X_p = np.zeros((len(list_sentences_train), maxlen))
+	for i in range(len(list_sentences_train)):
+		sentence = list_sentences_train[i]
+		for j in range(min(len(sentence), maxlen)):
+			char = sentence[j]
 			idx = all_chars.find(char)+1
-			vec[i]= idx
-		return vec
-
-	list_of_list_words = map(lambda x: x.split(), list_sentences_train) #shape=(159571,num_words_in_sentence)
-	list_wordcharidx = np.array(map(lambda x: map(char2idx, x), list_of_list_words))
-
-	X_p = np.zeros((len(list_of_list_words),maxlen, 10))
-	for i in range(len(list_of_list_words)):
-		word_list=list_of_list_words[i]
-		for j in range(min(maxlen,len(word_list))):
-			word = word_list[j]
-			v = char2idx(word)
-			X_p[i,j,:]=v
-
+			X_p[i,j]= idx
 
 	print(X_p.shape)
 	print(X_p[0])
-
 
 	list_classes = ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
 	y = train[list_classes].values
 	list_sentences_test = test["tokens"].values
 	
-	tokenizer = Tokenizer(num_words=max_features)
-	tokenizer.fit_on_texts(list(list_sentences_train) + list(list_sentences_test))
-	list_tokenized_train = tokenizer.texts_to_sequences(list_sentences_train)
-	print(list_tokenized_train[:3])
-	list_tokenized_test = tokenizer.texts_to_sequences(list_sentences_test)
-	X_t = pad_sequences(list_tokenized_train, maxlen=maxlen)
-	X_te = pad_sequences(list_tokenized_test, maxlen=maxlen)
+	# tokenizer = Tokenizer(num_words=max_features)
+	# tokenizer.fit_on_texts(list(list_sentences_train) + list(list_sentences_test))
+	# list_tokenized_train = tokenizer.texts_to_sequences(list_sentences_train)
+	# print(list_tokenized_train[:3])
+	# list_tokenized_test = tokenizer.texts_to_sequences(list_sentences_test)
+	# X_t = pad_sequences(list_tokenized_train, maxlen=maxlen)
+	# X_te = pad_sequences(list_tokenized_test, maxlen=maxlen)
 
 
-	print(X_t.shape) #(159571, 150)
+	# print(X_t.shape) #(159571, 150)
 	
 	# BUILD EMBEDDING MATRIX    
-	print('Preparing embedding matrix...')
-	# Read the FastText word vectors (space delimited strings) into a dictionary from word->vector
-	embeddings_index = dict(get_coefs(*o.strip().split()) for o in open(EMBEDDING_FILE))
-	print("embeddings_index size: ", len(embeddings_index))
+	# print('Preparing embedding matrix...')
+	# # Read the FastText word vectors (space delimited strings) into a dictionary from word->vector
+	# embeddings_index = dict(get_coefs(*o.strip().split()) for o in open(EMBEDDING_FILE))
+	# print("embeddings_index size: ", len(embeddings_index))
 
 	
-	word_index = tokenizer.word_index
-	print("word_index size: ", len(word_index))   
-	words_not_found = []
-	nb_words = min(max_features, len(word_index))
-	embedding_matrix = np.zeros((nb_words, embed_size))
-	for word, i in word_index.items():        
-		if i >= max_features: 
-			continue
-		embedding_vector = embeddings_index.get(word)
-		if (embedding_vector is not None) and len(embedding_vector) > 0:
-			embedding_matrix[i] = embedding_vector
-		else:
-			words_not_found.append(word)
-	print('number of null word embeddings: %d' % np.sum(np.sum(embedding_matrix, axis=1) == 0))
-	print("sample words not found: ", np.random.choice(words_not_found, 10))
-	df = pd.DataFrame(words_not_found)
-	df.to_csv(base_path_output + "word_not_found.csv", header=None, index=False)
+	# word_index = tokenizer.word_index
+	# print("word_index size: ", len(word_index))   
+	# words_not_found = []
+	# nb_words = min(max_features, len(word_index))
+	# embedding_matrix = np.zeros((nb_words, embed_size))
+	# for word, i in word_index.items():        
+	# 	if i >= max_features: 
+	# 		continue
+	# 	embedding_vector = embeddings_index.get(word)
+	# 	if (embedding_vector is not None) and len(embedding_vector) > 0:
+	# 		embedding_matrix[i] = embedding_vector
+	# 	else:
+	# 		words_not_found.append(word)
+	# print('number of null word embeddings: %d' % np.sum(np.sum(embedding_matrix, axis=1) == 0))
+	# print("sample words not found: ", np.random.choice(words_not_found, 10))
+	# df = pd.DataFrame(words_not_found)
+	# df.to_csv(base_path_output + "word_not_found.csv", header=None, index=False)
 	
 	#pd.DataFrame(embedding_matrix).to_csv(base_path_output + "embedding_matrix.csv", header=None, index=False)
 	
@@ -262,7 +272,7 @@ if __name__ == "__main__":
 	# MODEL
 	####################################################  
 	   
-	model = get_model(maxlen, max_features, embed_size, embedding_matrix, lr=1e-3, lr_d=0, units=128, dr=0.2)
+	model = get_model(maxlen, max_features, embed_size, lr=1e-3, lr_d=0, units=128, dr=0.2)
 
 	# model = get_model(maxlen, max_features, embed_size, embedding_matrix, lr=1e-3, lr_d=0, units=128, dr=0.2)
 
