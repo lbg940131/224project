@@ -9,6 +9,7 @@ import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
+from sklearn.metrics import accuracy_score
 
 train = pd.read_csv('../input/train.csv')
 test = pd.read_csv('../input/test.csv')
@@ -27,22 +28,37 @@ def get_AUC(model,data,y_gt):
 	score = roc_auc_score(y_gt, y_pred)
 	return score
 
+
+def get_accu(model, data, y_gt):
+	y_pred = model.predict_proba(data)[:,1]
+	y_class= (y_pred>0.5)
+	accu = accuracy_score(y_gt, y_class)
+	return accu
+
 preds = np.zeros((test.shape[0], 6))
 num_train = train.shape[0]
 
 L=[]
+M = []
+
+print(num_train)
 
 start= time.time()
 for idx, name in enumerate(classes):
-    print('===Fit '+name)
+    print('Fit '+name)
     model = LogisticRegression()
-    model.fit(X[:num_train], train[name])
+    # print(train[name])
+    model.fit(X[:100000], train[name][:100000])
     preds[:,idx] = model.predict_proba(X[num_train:])[:,1]
-    score = get_AUC(model,X[:num_train], train[name])
+    score = get_AUC(model,X[100000:num_train], train[name][100000:num_train])
+    accu = get_accu(model,X[100000:num_train], train[name][100000:num_train])
     print('AUC='+str(score))
+    print('accu='+str(accu))
     L.append(score)
+    M.append(accu)
     
 print('mean column-wise ROC AUC:', sum(L)*1.0/len(L))
+print('mean column-wise accu:', sum(M)*1.0/len(M))
 
 end=time.time()
 
